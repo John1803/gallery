@@ -1,5 +1,5 @@
 <?php
-/namespace Core\Http;
+namespace Core\Http;
 
 use Psr\Http\Message\StreamInterface;
 
@@ -27,7 +27,6 @@ class Stream implements StreamInterface
      * @param $stream
      * @param string $mode
      */
-
     public function __construct($stream, $mode = 'r')
     {
         $this->stream = $stream;
