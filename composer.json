@@ -1,0 +1,19 @@
+{
+  "name": "stoa/gallery",
+  "authors": [
+    {
+      "name": "UnknownArtist",
+      "email": "newaccold@gmail.com"
+    }
+  ],
+
+  "autoload": {
+    "psr-4": {
+      "Core\\": "src/Core/",
+      "Gallery\\": "src/Gallery/"}
+  },
+
+  "require": {
+    "psr/http-message": "^1.0"
+  }
+}
