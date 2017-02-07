@@ -309,7 +309,6 @@ class ServerRequest extends Request implements ServerRequestInterface
                 libxml_disable_entity_loader($backup);
                 break;
             case 'application/x-www-form-urlencoded':
-            case 'multipart/form-data':
                 parse_str($this->getBody()->getContents(), $data);
                 break;
             default:
