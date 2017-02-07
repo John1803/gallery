@@ -3,8 +3,8 @@ namespace Core\Http;
 
 class Headers
 {
-    protected $headers = [];
 
+    protected $headers = [];
 
     protected static $contentHeaders = [
         'CONTENT_TYPE',
