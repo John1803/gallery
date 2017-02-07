@@ -1,0 +1,20 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the requested filename exists serve it.
+     RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule .? - [L]
+
+    # Rewrite all other queries to the front controller.
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+
+        RedirectMatch 302 ^/$ /index.php/
+
+    </IfModule>
+</IfModule>
