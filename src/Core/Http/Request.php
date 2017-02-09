@@ -34,10 +34,10 @@ class Request extends Message implements RequestInterface
      * Request constructor.
      * @param null $method
      * @param UriInterface $uri
-     * @param Headers $headers
+     * @param array $headers
      * @param StreamInterface $body
      */
-    public function __construct($method = null, UriInterface $uri, Headers $headers, StreamInterface $body)
+    public function __construct($method = null, UriInterface $uri, array $headers, StreamInterface $body)
     {
         $this->method = $method;
         $this->headers = $headers;
