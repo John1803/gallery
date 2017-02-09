@@ -33,7 +33,7 @@ class Headers
             }
         }
 
-        return new static($headers);
+        return $headers;
     }
 
     /**
