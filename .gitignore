@@ -1,2 +1,4 @@
 /vendor
 /logs
+/app/routesSet.php
+/web/index.php
