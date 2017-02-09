@@ -286,11 +286,12 @@ class Stream implements StreamInterface
             throw new \RuntimeException("Stream is not readable");
         }
 
-        if (!stream_get_contents($this->stream)) {
+        $result = stream_get_contents($this->stream);
+        if ($result === false) {
             throw new \RuntimeException("Error reading of stream");
         }
 
-        return stream_get_contents($this->stream);
+        return $result;
     }
 
     /**
