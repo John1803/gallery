@@ -30,6 +30,8 @@ class ControllerActionDeterminer
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter->name, $attributes)) {
                 $arguments[] = $attributes[$parameter->name];
+            } else {
+                throw new \Exception("Action's parameters did not match with request");
             }
         }
 
