@@ -20,4 +20,19 @@ class ControllerActionDeterminer
 
         return [new $class(), $action];
     }
+
+    public function getActionArguments($controllerAction, ServerRequestInterface $serverRequest)
+    {
+        $arguments = [];
+        $attributes = $serverRequest->getAttributes();
+        $reflection = new \ReflectionMethod($controllerAction[0], $controllerAction[1]);
+        $parameters = $reflection->getParameters();
+        foreach ($parameters as $parameter) {
+            if (array_key_exists($parameter->name, $attributes)) {
+                $arguments[] = $attributes[$parameter->name];
+            }
+        }
+
+        return $arguments;
+    }
 }
