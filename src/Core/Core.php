@@ -30,7 +30,7 @@ class Core
         $serverRequestWithAttributes = $serverRequest->withAttributes($this->urlMatcher->match($serverRequestPath));
         $controllerAction = $this->controllerActionDeterminer->getControllerAndAction($serverRequestWithAttributes);
         $actionArguments = $this->controllerActionDeterminer->getActionArguments($controllerAction, $serverRequestWithAttributes);
-        $response = call_user_func_array($controllerAction, $actionArguments);
-        return $response;
+        return call_user_func_array($controllerAction, $actionArguments);
+
     }
 }
