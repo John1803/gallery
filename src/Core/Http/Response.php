@@ -139,6 +139,10 @@ class Response extends Message implements ResponseInterface
         return '';
     }
 
+    /**
+     * @param $statusCode
+     * @return mixed
+     */
     private function checkedStatusCode($statusCode)
     {
         if (!is_int($statusCode) || 100 < $statusCode || $statusCode > 599 ) {
@@ -148,9 +152,16 @@ class Response extends Message implements ResponseInterface
         return $statusCode;
     }
 
+    /**
+     * @return $this
+     */
     public function dispatch()
     {
-        return $this->getBody()->getContents();
+        $this->getBody()->rewind();
+        $content = $this->getBody()->getContents();
+        echo $content;
+
+        return $this;
     }
 
 }
