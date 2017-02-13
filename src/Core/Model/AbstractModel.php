@@ -2,7 +2,8 @@
 
 namespace Core\Model;
 
-class AbstractModel extends Connection
+abstract class AbstractModel extends Connection
+
 {
     /**
      * @var Connection

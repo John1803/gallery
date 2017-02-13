@@ -9,7 +9,7 @@ class Connection extends \PDO
     protected $dsn = "mysql:dbname=gallery;host=localhost";
 
     /**
-     * AbstractMapper constructor.
+     * Connection constructor.
      * @param string $dsn
      * @param string $user
      * @param string $password

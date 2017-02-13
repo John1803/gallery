@@ -5,7 +5,7 @@ namespace Core\Controller;
 use Core\Http\Response;
 use Core\View\Templating;
 
-class AbstractController
+abstract class AbstractController
 {
     /**
      * @var Response
