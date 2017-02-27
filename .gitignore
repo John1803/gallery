@@ -1,5 +1,9 @@
 /vendor
 /logs
-/app/routesSet.php
-/web/index.php
+/app/routesSetExp.php
+/web/*
+
 /src/Gallery/*
+!/src/Gallery/Controllers
+/src/Gallery/Controllers/*
+!/src/Gallery/Controllers/AlbumController.php
