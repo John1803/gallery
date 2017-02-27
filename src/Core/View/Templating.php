@@ -26,7 +26,7 @@ class Templating
      * @param array $data
      * @return string
      */
-    public function render(ResponseInterface $response, $template, array $data)
+    public function render(ResponseInterface $response, $template, array $data = [])
     {
         $output = $this->retrieve($template, $data);
         $response->getBody()->write($output);
@@ -51,7 +51,7 @@ class Templating
      * @param $template
      * @param array $data
      */
-    private function extractToTemplate($template, array $data)
+    private function extractToTemplate($template, $data)
     {
         extract($data);
         include $template;
