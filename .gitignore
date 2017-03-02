@@ -5,5 +5,7 @@
 
 /src/Gallery/*
 !/src/Gallery/Controllers
+!/src/Gallery/Models
+!/src/Gallery/Helpers
 /src/Gallery/Controllers/*
 !/src/Gallery/Controllers/AlbumController.php

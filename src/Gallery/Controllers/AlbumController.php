@@ -4,7 +4,10 @@ namespace Gallery\Controllers;
 
 use Core\Controller\AbstractController;
 use Core\Helpers\Filesystem;
+use Gallery\Helpers\AlbumDataHandler;
 use Gallery\Models\Album;
+use Gallery\Models\AlbumEntity;
+use Gallery\Models\AlbumMapper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AlbumController extends AbstractController
@@ -23,21 +26,26 @@ class AlbumController extends AbstractController
     public function createAction(ServerRequestInterface $serverRequest)
     {
         $filesystem = new Filesystem();
-        $albumsData = $serverRequest->getParsedBody();
+        $albumMapper = new AlbumMapper();
+        $albumHandlerData = new AlbumDataHandler();
+        $albumData = $serverRequest->getParsedBody();
+        $albumAncestorId = filter_var($albumData['parent'], FILTER_VALIDATE_INT);
 
-        /**
-         * Ability to create few subalbums
-         */
-
-        if (is_array($albumsData['title'])) {
-            foreach ($albumsData['title'] as $key => $value) {
-                $albumsData['title'][$key] = self::ALBUMS_DIR . filter_var($albumsData['title'][$key], FILTER_SANITIZE_STRING);
-            }
-        } else {
-            $albumsData['title'] = self::ALBUMS_DIR . filter_var($albumsData['title'], FILTER_SANITIZE_STRING);
+        if ($albumAncestorId > 0) {
+            $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
+            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
+            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }
 
-        $filesystem->mkdir($albumsData['title']);
+        if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
+            $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
+            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
+        }
+
+        $handledAlbumData = $albumHandlerData->filterData($albumData);
+        $album = new AlbumEntity($handledAlbumData);
+        $filesystem->mkdir($album->getPath());
+        $albumMapper->save($album);
     }
     public function updateAction()
     {

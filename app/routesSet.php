@@ -9,8 +9,8 @@ $routesSet = new RoutesSet();
  * Root albums on main page
  */
 
-$routesSet->add("gallery_root_albums", new Route("/gallery",
-    "/^\\/gallery$/",
+$routesSet->add("gallery_root_albums", new Route("/",
+    "/^\\/$/",
     ["controllerAction" => "\Gallery\Controllers\GalleryController:indexAction"]));
 
 /**
