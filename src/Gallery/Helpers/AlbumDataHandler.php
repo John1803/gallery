@@ -23,11 +23,11 @@ class AlbumDataHandler
         $album = [];
         $album['title'] = filter_var($data['title'], FILTER_SANITIZE_STRING);
 
-//        if (strpos($data['path'], $this->getPath()) === 0) {
-//            $album['path'] = $data['path'] . DIRECTORY_SEPARATOR . $album['title'];
-//        } else {
+        if (strpos($data['path'], $this->getPath()) === 0) {
+            $album['path'] = $data['path'];
+        } else {
             $album['path'] = $this->getPath() . $album['title'];
-//        }
+        }
 
         $album['lft'] = $data['lft'] ? filter_var($data['lft'], FILTER_VALIDATE_INT) : 1;
         $album['rgt'] = $data['rgt'] ? filter_var($data['rgt'], FILTER_VALIDATE_INT) : 2;
@@ -36,12 +36,12 @@ class AlbumDataHandler
         return $album;
     }
 
-    public function prepareDescendantLeftRightLevelPosition(AlbumEntity $album)
+    public function prepareDescendantData(AlbumEntity $album, $albumData)
     {
         $albumData['lft'] = $album->getRgt();
         $albumData['rgt'] = $album->getRgt() + 1;
         $albumData['lvl'] = $album->getLvl() + 1;
-//        $albumData['path'] = $album->getPath() . DIRECTORY_SEPARATOR . $albumData['title'];
+        $albumData['path'] = $album->getPath() . DIRECTORY_SEPARATOR . $albumData['title'];
 
         return $albumData;
     }

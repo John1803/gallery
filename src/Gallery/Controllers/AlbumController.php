@@ -30,36 +30,16 @@ class AlbumController extends AbstractController
         $albumHandlerData = new AlbumDataHandler();
         $albumData = $serverRequest->getParsedBody();
         $albumAncestorId = filter_var($albumData['parent'], FILTER_VALIDATE_INT);
-//        $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
 
         if (true === (bool)$albumAncestorId &&
-            0 === $albumMapper->getAlbumById($albumAncestorId)->getLvl()) {
+            0 <= $albumMapper->getAlbumById($albumAncestorId)->getLvl()) {
             $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
-            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
+            $albumHandledData = $albumHandlerData->prepareDescendantData($albumAncestor, $albumData);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
-        } else if (true === (bool)$albumAncestorId &&
-            $albumMapper->getAlbumById($albumAncestorId)->getLvl() > 0) {
-            $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
-            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
-            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
-        } else if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
-//            $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
+        }  else if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
             $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }
-
-//        if (0 === $albumAncestorId &&
-//            !(is_null($albumLastSibling)) &&
-//            0 === $albumLastSibling->getLvl()) {
-//            $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
-//            $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
-//            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
-//        } else if ($albumAncestor = $albumMapper->getAlbumById($albumAncestorId)) {
-//            $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
-//            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
-//            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
-//        }
-
 
         $handledAlbumData = $albumHandlerData->filterData($albumData);
         $album = new AlbumEntity($handledAlbumData);
