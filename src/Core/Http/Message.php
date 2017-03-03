@@ -54,6 +54,7 @@ class Message implements MessageInterface
      */
     public function hasHeader($header)
     {
+
         return array_key_exists(Headers::normalizedHeaderName($header), $this->getHeaders());
     }
 

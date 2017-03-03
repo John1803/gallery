@@ -11,8 +11,8 @@ class Stream implements StreamInterface
      * @var array $modes
      */
     protected $modes = [
-        'readable' => ['r', 'r+', 'w+', 'a+', 'x+', 'c+',],
-        'writable' => ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+',],
+        'readable' => ['r', 'r+', 'w+', 'a+', 'x+', 'c+', 'rb', 'r+b', ],
+        'writable' => ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'wb', 'w+b'],
     ]
     ;
 
@@ -215,19 +215,16 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        if (!$this->stream) {
-            throw new \RuntimeException("Cannot write data to the stream, no resource");
-        }
-
         if (!$this->isWritable()) {
-            throw new \RuntimeException("Cannot write data to the stream, it is not writable");
+            throw new \RuntimeException('Could not write to stream');
         }
 
-        if (!fwrite($this->stream, $string)) {
-            throw new \RuntimeException("Cannot write data to the stream, writing process was interrupted");
+        $result = fwrite($this->stream, $string);
+        if ($result === false) {
+            throw new \RuntimeException('Could not write to stream');
         }
 
-        return fwrite($this->stream, $string);
+        return $result;
     }
 
     /**
@@ -286,11 +283,12 @@ class Stream implements StreamInterface
             throw new \RuntimeException("Stream is not readable");
         }
 
-        if (!stream_get_contents($this->stream)) {
+        $result = stream_get_contents($this->stream);
+        if ($result === false) {
             throw new \RuntimeException("Error reading of stream");
         }
 
-        return stream_get_contents($this->stream);
+        return $result;
     }
 
     /**

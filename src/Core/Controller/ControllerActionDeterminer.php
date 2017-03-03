@@ -1,0 +1,42 @@
+<?php
+
+namespace Core\Controller;
+
+use Psr\Http\Message\ServerRequestInterface;
+
+class ControllerActionDeterminer
+{
+    public function getControllerAndAction(ServerRequestInterface $request)
+    {
+        if (!$controllerAction = $request->getAttribute("controllerAction")) {
+            throw new \Exception("$controllerAction is not define");
+        }
+
+        list($class, $action) = explode(":", $controllerAction);
+
+        if (!class_exists($class)) {
+            throw new \Exception("$class is not exist");
+        }
+
+        return [new $class(), $action];
+    }
+
+    public function getActionArguments($controllerAction, ServerRequestInterface $serverRequest)
+    {
+        $arguments = [];
+        $attributes = $serverRequest->getAttributes();
+        $reflection = new \ReflectionMethod($controllerAction[0], $controllerAction[1]);
+        $parameters = $reflection->getParameters();
+        foreach ($parameters as $parameter) {
+            if (array_key_exists($parameter->name, $attributes)) {
+                $arguments[] = $attributes[$parameter->name];
+            } else if ($parameter->getClass() && $parameter->getClass()->isInstance($serverRequest)) {
+                $arguments[] = $serverRequest;
+            } else {
+                throw new \Exception("Action's parameters did not match with request");
+            }
+        }
+
+        return $arguments;
+    }
+}
