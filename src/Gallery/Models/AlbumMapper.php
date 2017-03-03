@@ -20,6 +20,29 @@ class AlbumMapper extends AbstractModel
         return $results;
     }
 
+    public function getDirectDescendantAlbums($id)
+    {
+        $sql = "SELECT descendant.id, descendant.title, descendant.path, descendant.lft, descendant.rgt, descendant.lvl
+                FROM albums AS descendant
+                JOIN albums AS ancestor
+                ON ancestor.id = :id
+                AND descendant.lvl > ancestor.lvl
+                AND descendant.lvl < ancestor.lvl + 2
+                AND descendant.lft
+                BETWEEN ancestor.lft AND ancestor.rgt;";
+
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindParam(":id", $id, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $results = [];
+        while($row = $stmt->fetch()) {
+            $results[] = new AlbumEntity($row);
+        }
+        return $results;
+
+    }
+    
     public function getAlbumWithMaxRightProperty()
     {
         $maxRight = $this->getMaxRightValue();
@@ -38,14 +61,15 @@ class AlbumMapper extends AbstractModel
 
     public function getAlbumById($id)
     {
-        $sql = "SELECT *
-                FROM almums AS a
+        $sql = "SELECT a.id, a.title, a.path, a.lft, a.rgt, a.lvl
+                FROM albums AS a
                 WHERE a.id = :id";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bindParam(":id", $id, \PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id, \PDO::PARAM_INT)   ;
         $stmt->execute();
+        $result = $stmt->fetch();
 
-        return new AlbumEntity($stmt->fetch());
+        return new AlbumEntity($result);
     }
     public function save(AlbumEntity $album)
     {

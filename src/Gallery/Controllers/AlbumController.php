@@ -30,22 +30,64 @@ class AlbumController extends AbstractController
         $albumHandlerData = new AlbumDataHandler();
         $albumData = $serverRequest->getParsedBody();
         $albumAncestorId = filter_var($albumData['parent'], FILTER_VALIDATE_INT);
+//        $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
 
-        if ($albumAncestorId > 0) {
+        if (true === (bool)$albumAncestorId &&
+            0 === $albumMapper->getAlbumById($albumAncestorId)->getLvl()) {
             $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
             $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
-        }
-
-        if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
+        } else if (true === (bool)$albumAncestorId &&
+            $albumMapper->getAlbumById($albumAncestorId)->getLvl() > 0) {
+            $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
+            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
+            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
+        } else if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
+//            $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
             $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }
+
+//        if (0 === $albumAncestorId &&
+//            !(is_null($albumLastSibling)) &&
+//            0 === $albumLastSibling->getLvl()) {
+//            $albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty();
+//            $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
+//            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
+//        } else if ($albumAncestor = $albumMapper->getAlbumById($albumAncestorId)) {
+//            $albumAncestor = $albumMapper->getAlbumById($albumAncestorId);
+//            $albumHandledData = $albumHandlerData->prepareDescendantLeftRightLevelPosition($albumAncestor);
+//            $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
+//        }
+
 
         $handledAlbumData = $albumHandlerData->filterData($albumData);
         $album = new AlbumEntity($handledAlbumData);
         $filesystem->mkdir($album->getPath());
         $albumMapper->save($album);
+    }
+
+    public function editAction()
+    {
+        $albumMapper = new AlbumMapper();
+        $albums = $albumMapper->getRootAlbums();
+
+        return $this->getTemplating()->render($this->getResponse(),
+                                                "/albums/albumsEdit.phtml",
+                                                ["albums" => $albums, ]
+        );
+    }
+
+    public function editAlbumAction($id)
+    {
+        $albumMapper = new AlbumMapper();
+        $albums = $albumMapper->getDirectDescendantAlbums($id);
+
+        return $this->getTemplating()->render($this->getResponse(),
+                                                "/albums/albumsEdit.phtml",
+                                                ["albums" => $albums,
+                                                "albumId" => $id, ]
+        );
     }
     public function updateAction()
     {
@@ -56,8 +98,12 @@ class AlbumController extends AbstractController
         // TODO: deletes created albums
     }
 
-    public function albumFormCreationAction()
+    public function albumFormCreationAction(ServerRequestInterface $serverRequest)
     {
-        return $this->getTemplating()->render($this->getResponse(), '/albums/albumForm.phtml');
+        $ancestorId = filter_var($serverRequest->getParsedBody()["parent"], FILTER_VALIDATE_INT);
+        return $this->getTemplating()->render($this->getResponse(),
+                                                "/albums/albumForm.phtml",
+                                                ["albumId" => $ancestorId, ]
+        );
     }
 }
