@@ -153,6 +153,10 @@ class Response extends Message implements ResponseInterface
     }
 
     /**
+     * Non-PSR7 method
+     *
+     * Return content to $content
+     *
      * @return $this
      */
     public function dispatch()
@@ -164,4 +168,24 @@ class Response extends Message implements ResponseInterface
         return $this;
     }
 
+
+    /**
+     * Non-PSR7 method
+     * Prepares the response object to return an HTTP Redirect.
+     *
+     * @param $route
+     * @param null $status
+     * @return $this
+     */
+    public function withRedirect($route, $status = null)
+    {
+        $responseWithRedirect = clone $this;
+        $responseWithRedirect->withHeader("Location", $route);
+
+        if (is_null($status) && $this->getStatusCode() === 200) {
+            $status = 302;
+        }
+
+        return $responseWithRedirect->withStatus($status);
+    }
 }
