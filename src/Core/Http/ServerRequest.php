@@ -311,6 +311,9 @@ class ServerRequest extends Request implements ServerRequestInterface
             case 'application/x-www-form-urlencoded':
                 parse_str($this->getBody()->getContents(), $data);
                 break;
+            case 'multipart/form-data':
+                $this->parsedBody = $data;
+                break;
             default:
                 $data = null;
                 break;
