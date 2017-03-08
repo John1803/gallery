@@ -2,6 +2,7 @@
 /logs
 /app/routesSetExp.php
 /web/*
+!/web/index.php
 
 /src/Gallery/*
 !/src/Gallery/Controllers
@@ -9,3 +10,7 @@
 !/src/Gallery/Helpers
 /src/Gallery/Controllers/*
 !/src/Gallery/Controllers/AlbumController.php
+!/src/Gallery/Controllers/ImageController.php
+!/src/Gallery/templates/albums
+!/src/Gallery/templates/gallery
+!/src/Gallery/templates/images

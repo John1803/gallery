@@ -58,7 +58,7 @@ class UploadedFile implements UploadedFileInterface
      * @param $size
      * @param $error
      */
-    public function __construct($clientFilename, $clientMediaType, $file, $size, $error)
+    public function __construct($clientFilename = null, $clientMediaType = null, $file = null, $size = null, $error = null)
     {
         $this->clientFilename = $clientFilename;
         $this->clientMediaType = $clientMediaType;
@@ -97,16 +97,16 @@ class UploadedFile implements UploadedFileInterface
                     $uploadedFileInfo['size'],
                     $uploadedFileInfo['error']
                 );
-            }
-            foreach ($uploadedFileInfo['name'] as $fileIndex => $name) {
-                $fileMetadata[$fileIndex]['name'] = $uploadedFileInfo['name'][$fileIndex];
-                $fileMetadata[$fileIndex]['type'] = $uploadedFileInfo['type'][$fileIndex];
-                $fileMetadata[$fileIndex]['tmp_name'] = $uploadedFileInfo['tmp_name'][$fileIndex];
-                $fileMetadata[$fileIndex]['size'] = $uploadedFileInfo['size'][$fileIndex];
-                $fileMetadata[$fileIndex]['error'] = $uploadedFileInfo['error'][$fileIndex];
+            } else {
+                foreach ($uploadedFileInfo['name'] as $fileIndex => $name) {
+                    $fileMetadata[$fileIndex]['name'] = $uploadedFileInfo['name'][$fileIndex];
+                    $fileMetadata[$fileIndex]['type'] = $uploadedFileInfo['type'][$fileIndex];
+                    $fileMetadata[$fileIndex]['tmp_name'] = $uploadedFileInfo['tmp_name'][$fileIndex];
+                    $fileMetadata[$fileIndex]['size'] = $uploadedFileInfo['size'][$fileIndex];
+                    $fileMetadata[$fileIndex]['error'] = $uploadedFileInfo['error'][$fileIndex];
 
-                $normalizedUploadedFilesTree[$attachment] = static::normalizedUploadedFilesTree($fileMetadata);
-
+                    $normalizedUploadedFilesTree[$attachment] = static::normalizedUploadedFilesTree($fileMetadata);
+                }
             }
         }
 
@@ -179,15 +179,11 @@ class UploadedFile implements UploadedFileInterface
     public function moveTo($targetPath)
     {
 
-        if (!$this->moved) {
+        if ($this->moved) {
             throw new \RuntimeException("Second or subsequent call to the method");
         }
 
-        if (!is_dir($targetPath) || !is_writable($targetPath)) {
-            throw new \InvalidArgumentException("TargetPath is invalid; it must be writable directory");
-        }
-
-        if (php_sapi_name() === "cli" || $targetPath[0] === "/") {
+        if (php_sapi_name() === "cli") {
             rename($this->clientFilename, $targetPath);
         }
 
@@ -195,11 +191,11 @@ class UploadedFile implements UploadedFileInterface
 
         }
 
-        if (!is_uploaded_file($this->clientFilename)) {
-            throw new \RuntimeException("$this->clientFilename is nor valid");
+        if (!is_uploaded_file($this->file)) {
+            throw new \RuntimeException("$this->clientFilename is not valid");
         }
 
-        if (!move_uploaded_file($this->clientFilename, $targetPath)) {
+        if (!move_uploaded_file($this->file, $targetPath)) {
             throw new \RuntimeException("Could not move file to directory");
         }
 
@@ -273,5 +269,17 @@ class UploadedFile implements UploadedFileInterface
     public function getClientMediaType()
     {
         return $this->clientMediaType;
+    }
+
+    /**
+     * Non-PSR7 method
+     *
+     * Get full path to the file
+     *
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
     }
 }
