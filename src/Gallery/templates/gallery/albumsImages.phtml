@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
+<table class="pure-table">
 <?php
 if(count($albums) > 0):
     ?>
@@ -20,17 +21,23 @@ if(count($albums) > 0):
                     <td><a href="/gallery/albums/images/album/<?php echo $album->getId(); ?>"><?php echo $album->getTitle(); ?></td>
                 </tr>
             <?php endforeach; ?>
-        <?php
-        /** @var \Gallery\Models\ImageEntity $image */
-            foreach ($images as $image): ?>
-            <tr class="pure-table">
-                <td><a href="<?php echo $image->getPath(); ?>"><?php echo $image->getTitle(); ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
 <?php else: ?>
-    <p>No current albums</p>
+    <tr class="pure-table">
+        <td><p>No current albums</p></td>
+    </tr>
 <?php endif; ?>
+
+<?php
+    if (count($images) > 0):
+    /** @var \Gallery\Models\ImageEntity $image */
+    foreach ($images as $image): ?>
+        <tr class="pure-table">
+            <td><a href="<?php echo $image->getPath(); ?>"><?php echo $image->getTitle(); ?></td>
+        </tr>
+    <?php endforeach; ?>
+<?php endif; ?>
+</table>
+
 
 </body>
 </html>
