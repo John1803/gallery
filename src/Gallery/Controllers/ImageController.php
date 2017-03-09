@@ -4,7 +4,10 @@ namespace Gallery\Controllers;
 
 use Core\Controller\AbstractController;
 use Core\Http\UploadedFile;
+use Gallery\Helpers\ImageDataHandler;
 use Gallery\Models\AlbumMapper;
+use Gallery\Models\ImageEntity;
+use Gallery\Models\ImageMapper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ImageController extends AbstractController
@@ -22,6 +25,8 @@ class ImageController extends AbstractController
     public function uploadAction(ServerRequestInterface $serverRequest)
     {
         $albumMapper = new AlbumMapper();
+        $imageMapper = new ImageMapper();
+        $imageDataHandler = new ImageDataHandler();
         $uploadedImages = $serverRequest->getUploadedFiles();
         $data = $serverRequest->getParsedBody();
         $albumId = filter_var($data['album'], FILTER_VALIDATE_INT);
@@ -34,12 +39,13 @@ class ImageController extends AbstractController
                                                 $image->getClientMediaType(),
                                                 $image->getFile(),
                                                 $image->getSize(),
-                                                $image->getError());
-            $albumPath = $album->getPath(). DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename();
-            $uploadedFile->moveTo($albumPath);
-        }
+                                                $image->getError()
+            );
 
-        var_dump($uploadedImages);
+            $imageEntity = new ImageEntity($imageDataHandler->prepareData($album, $uploadedFile));
+            $uploadedFile->moveTo($imageEntity->getPath());
+            $imageMapper->save($imageEntity);
+        }
 
     }
 }
