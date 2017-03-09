@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Album</title>
+    <link rel="stylesheet" href="http://yegor256.github.io/tacit/tacit.min.css">
+</head>
+<body>
+    <h1>Create Album</h1>
+
+    <form method="post" action="/album/new" enctype="application/x-www-form-urlencoded" class="pure-form">
+    <label for="album">Album</label>
+    <input type="text" id="album" size="60" name="title" /><br />
+    <input type="hidden" size="60" name="parent" value="<?php echo (int)$albumId?>"/><br />
+
+    <input type="submit" class="pure-button" value="Create" />
+</form>
+</body>
+</html>

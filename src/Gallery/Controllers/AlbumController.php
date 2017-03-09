@@ -45,10 +45,10 @@ class AlbumController extends AbstractController
 
         // TODO: Redirect
 
-        $albums = $albumMapper->getRootAlbums();
         return $this->getTemplating()->render($this->getResponse(),
-            "gallery/gallery.phtml",
-            ['albums' => $albums, ]
+                                             "/albums/albumRedirect.phtml",
+                                                ["albumId" => $albumAncestorId,
+                                                "albumTitle" => $album->getTitle(), ]
         );
     }
 
@@ -66,12 +66,14 @@ class AlbumController extends AbstractController
     public function editAlbumAction($id)
     {
         $albumMapper = new AlbumMapper();
+        $albumAncestor = $albumMapper->getAlbumById($id);
         $albums = $albumMapper->getDirectDescendantAlbums($id);
 
         return $this->getTemplating()->render($this->getResponse(),
                                                 "/albums/albumsEdit.phtml",
                                                 ["albums" => $albums,
-                                                "albumId" => $id, ]
+                                                "albumId" => $id,
+                                                "albumTitle" => $albumAncestor->getTitle(), ]
         );
     }
     public function updateAction()
