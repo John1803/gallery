@@ -47,5 +47,12 @@ class ImageController extends AbstractController
             $imageMapper->save($imageEntity);
         }
 
+        // TODO: Redirect
+        return $this->getTemplating()->render($this->getResponse(),
+                                                "/images/imageRedirect.phtml",
+                                                ["albumTitle" => $album->getTitle(),]
+
+
+        );
     }
 }

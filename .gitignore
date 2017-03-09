@@ -11,6 +11,7 @@
 /src/Gallery/Controllers/*
 !/src/Gallery/Controllers/AlbumController.php
 !/src/Gallery/Controllers/ImageController.php
+!/src/Gallery/Controllers/GalleryController.php
 !/src/Gallery/templates/albums
 !/src/Gallery/templates/gallery
 !/src/Gallery/templates/images
