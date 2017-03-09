@@ -4,6 +4,7 @@ namespace Gallery\Controllers;
 
 use Core\Controller\AbstractController;
 use Gallery\Models\AlbumMapper;
+use Gallery\Models\ImageMapper;
 
 class GalleryController extends AbstractController
 {
@@ -18,14 +19,17 @@ class GalleryController extends AbstractController
         );
     }
 
-    public function showImagesAlbumsAction($level)
+    public function showImagesAlbumsAction($id)
     {
        $albumMapper = new AlbumMapper();
-        $albums = $albumMapper->getRootAlbums();
+       $imageMapper = new ImageMapper();
+       $albums = $albumMapper->getDirectDescendantAlbums($id);
+       $images = $imageMapper->getImagesOfAlbum($id);
 
         return $this->getTemplating()->render($this->getResponse(),
-            "albums/albumsEdit.phtml",
-            ['albums' => $albums, ]
+                                                "gallery/albumsImages.phtml",
+                                                ["albums" => $albums,
+                                                "images" => $images, ]
         );
 
 

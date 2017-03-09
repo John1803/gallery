@@ -6,6 +6,24 @@ use Core\Model\AbstractModel;
 
 class ImageMapper extends AbstractModel
 {
+    public function getImagesOfAlbum($id)
+    {
+        $sql = "SELECT img.id, img.album_id, img.title, img.path, img.size, img.mediaType
+                FROM images AS img
+                  JOIN albums AS descendant
+                    ON descendant.id = img.album_id
+                        AND descendant.id = :id";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindParam(":id", $id, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $results = [];
+        while($row = $stmt->fetch()) {
+            $results[] = new ImageEntity($row);
+        }
+        return $results;
+    }
+
     public function save(ImageEntity $image)
     {
         $sql = "INSERT INTO images(album_id, title, path, size, mediaType) 

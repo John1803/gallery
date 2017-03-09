@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<?php
+if(count($albums) > 0):
+    ?>
+    <table class="pure-table">
+        <tr>
+            <th>Title</th>
+        </tr>
+
+        <?php
+        /** @var \Gallery\Models\AlbumEntity $album */
+            foreach($albums as $album): ?>
+                <tr class="pure-table">
+                    <td><a href="/gallery/albums/images/album/<?php echo $album->getId(); ?>"><?php echo $album->getTitle(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php
+        /** @var \Gallery\Models\ImageEntity $image */
+            foreach ($images as $image): ?>
+            <tr class="pure-table">
+                <td><a href="<?php echo $image->getPath(); ?>"><?php echo $image->getTitle(); ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+<?php else: ?>
+    <p>No current albums</p>
+<?php endif; ?>
+
+</body>
+</html>

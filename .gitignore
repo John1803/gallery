@@ -13,6 +13,8 @@
 
 !/src/Gallery/Controllers/ImageController.php
 !/src/Gallery/Controllers/GalleryController.php
+!/src/Gallery/templates
+/src/Gallery/templates/*
 !/src/Gallery/templates/albums
 !/src/Gallery/templates/gallery
 !/src/Gallery/templates/images

@@ -22,7 +22,7 @@ if(count($albums) > 0):
         foreach($albums as $album): ?>
 
             <tr class="pure-table">
-                <td><?php echo $album->getTitle() ?></td>
+                <td><a href="/gallery/albums/images/album/<?php echo $album->getId(); ?>"><?php echo $album->getTitle(); ?></td>
             </tr>
 
         <?php endforeach; ?>

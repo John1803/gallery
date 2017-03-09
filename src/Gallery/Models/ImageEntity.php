@@ -50,7 +50,7 @@ class ImageEntity
         if (isset($data['id'])) {
             $this->id = $data['id'];
         }
-        $this->albumId = $data['albumId'];
+        $this->albumId = $data['album_id'];
         $this->title = $data['title'];
         $this->path = $data['path'];
         $this->size = $data['size'];
