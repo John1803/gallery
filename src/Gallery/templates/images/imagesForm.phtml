@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Upload images</title>
+    <link rel="stylesheet" href="http://yegor256.github.io/tacit/tacit.min.css">
+</head>
+<body>
+<h1>Upload Image</h1>
+
+<form method="post" action="/upload/image" enctype="multipart/form-data" class="pure-form">
+    <label for="image-one">Image</label>
+    <input type="file" id="image-one" size="60" name="image[]" /><br />
+    <label for="image-two">Image</label>
+    <input type="file" id="image-two" size="60" name="image[]" /><br />
+
+    <label for="album">Choose Album</label>
+    <select id="album" name="album">
+
+        <?php
+        /**
+         * @var \Gallery\Models\AlbumEntity $album
+         */
+        foreach($albums as $album): ?>
+            <option value="<?php echo $album->getId(); ?>"><?php echo $album->getTitle(); ?></option>
+            <?php
+        endforeach;
+        ?>
+    </select><br />
+
+    <input type="submit" class="pure-button" value="Upload" />
+</form>
+
+</body>
+</html>

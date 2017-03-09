@@ -42,5 +42,15 @@ $routesSet->add("edit_album_id", new Route("/edit/album/{id}",
     "/^\\/edit\\/album\\/(?<id>[\d^\\/]+)$/",
     ["controllerAction" => "\Gallery\Controllers\AlbumController:editAlbumAction"]
     ));
+$routesSet->add("image_form_upload", new Route("/image/form-upload",
+    "/^\\/image\\/form-upload$/",
+    ["controllerAction" => "\Gallery\Controllers\ImageController:imageFormAction"]
+    ));
+$routesSet->add("image_upload", new Route("/upload/image",
+    "/^\\/upload\\/image$/",
+    ["controllerAction" => "\Gallery\Controllers\ImageController:uploadAction"]
+    ));
+
+
 
 

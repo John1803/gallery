@@ -20,6 +20,25 @@ class AlbumMapper extends AbstractModel
         return $results;
     }
 
+    public function getAlbumsTree()
+    {
+        $sql = "SELECT descendant.id, descendant.title, descendant.path, descendant.lft, descendant.rgt, descendant.lvl 
+                FROM albums AS descendant
+                JOIN albums AS ancestor
+                ON descendant.lft BETWEEN ancestor.lft AND ancestor.rgt
+                GROUP BY descendant.title
+                ORDER BY descendant.lft;";
+
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+
+        $results = [];
+        while($row = $stmt->fetch()) {
+            $results[] = new AlbumEntity($row);
+        }
+        return $results;
+    }
+
     public function getDirectDescendantAlbums($id)
     {
         $sql = "SELECT descendant.id, descendant.title, descendant.path, descendant.lft, descendant.rgt, descendant.lvl
