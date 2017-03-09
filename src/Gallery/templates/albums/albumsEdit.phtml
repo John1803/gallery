@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Gallery Application</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+</head>
+<body>
+    <?php if (0 === (int)$albumId):?>
+        <h1>You edit root albums <?php echo $albumTitle?></h1>
+        <?php else: ?>
+        <h1>You edit album <?php echo $albumTitle?></h1>
+    <?php endif;?>
+
+    <form action="/album/form" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="parent" value="<?php echo (int)$albumId?>"/>
+        <input type="submit" class="pure-button" value="Create" />
+    </form>
+
+    <?php
+    if(count($albums) > 0):
+        ?>
+        <table class="pure-table">
+            <tr>
+                <th>Title</th>
+            </tr>
+
+            <?php
+            /**
+             * @var \Gallery\Models\AlbumEntity $album
+             */
+            foreach($albums as $album): ?>
+                <tr class="pure-table">
+                    <td><a href="/edit/album/<?php echo $album->getId() ?>"><?php echo $album->getTitle() ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <p>No current albums</p>
+    <?php endif; ?>
+
+</body>
+</html>

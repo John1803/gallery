@@ -5,15 +5,12 @@ namespace Gallery\Controllers;
 use Core\Controller\AbstractController;
 use Core\Helpers\Filesystem;
 use Gallery\Helpers\AlbumDataHandler;
-use Gallery\Models\Album;
 use Gallery\Models\AlbumEntity;
 use Gallery\Models\AlbumMapper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AlbumController extends AbstractController
 {
-
-    const ALBUMS_DIR = "../web/albums/";
 
     public function indexAction()
     {
@@ -37,7 +34,7 @@ class AlbumController extends AbstractController
             $albumHandledData = $albumHandlerData->prepareDescendantData($albumAncestor, $albumData);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }  else if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
-            $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
+            $albumHandledData = $albumHandlerData->prepareSiblingData($albumLastSibling);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }
 
@@ -45,6 +42,14 @@ class AlbumController extends AbstractController
         $album = new AlbumEntity($handledAlbumData);
         $filesystem->mkdir($album->getPath());
         $albumMapper->save($album);
+
+        // TODO: Redirect
+
+        return $this->getTemplating()->render($this->getResponse(),
+                                             "/albums/albumRedirect.phtml",
+                                                ["albumId" => $albumAncestorId,
+                                                "albumTitle" => $album->getTitle(), ]
+        );
     }
 
     public function editAction()
@@ -61,12 +66,14 @@ class AlbumController extends AbstractController
     public function editAlbumAction($id)
     {
         $albumMapper = new AlbumMapper();
+        $albumAncestor = $albumMapper->getAlbumById($id);
         $albums = $albumMapper->getDirectDescendantAlbums($id);
 
         return $this->getTemplating()->render($this->getResponse(),
                                                 "/albums/albumsEdit.phtml",
                                                 ["albums" => $albums,
-                                                "albumId" => $id, ]
+                                                "albumId" => $id,
+                                                "albumTitle" => $albumAncestor->getTitle(), ]
         );
     }
     public function updateAction()

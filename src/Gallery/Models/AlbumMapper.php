@@ -92,7 +92,7 @@ class AlbumMapper extends AbstractModel
         $this->getConnection()->exec("UNLOCK TABLES;");
 
         if (!$result) {
-            throw new \Exception("could not save record");
+            throw new \Exception("Could not save record");
         }
     }
 

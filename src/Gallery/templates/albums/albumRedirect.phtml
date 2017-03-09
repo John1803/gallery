@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Congratulation!</title>
+</head>
+<body>
+    <h1>
+        Congratulation!
+    </h1>
+    <div>
+        <?php if (0 === $albumId):?>
+            <p>The album <?php echo $albumTitle?> was created!<a href="/album/edit">Come back</a> to continue</p>
+        <?php else: ?>
+            <p>The album <?php echo $albumTitle?> was created!<a href="/edit/album/<?php echo $albumId ?>">Come back</a> to continue</p>
+        <?php endif;?>
+    </div>
+</body>
+</html>

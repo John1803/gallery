@@ -9,3 +9,10 @@
 !/src/Gallery/Helpers
 /src/Gallery/Controllers/*
 !/src/Gallery/Controllers/AlbumController.php
+!/src/Gallery/Controllers/GalleryController.php
+!/src/Gallery/templates
+/src/Gallery/templates/*
+!/src/Gallery/templates/albums
+!/src/Gallery/templates/gallery
+
+

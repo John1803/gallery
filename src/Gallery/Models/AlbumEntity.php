@@ -42,10 +42,6 @@ class AlbumEntity
     protected $lvl;
 
     /**
-     * @var
-     */
-
-    /**
      * AlbumEntity constructor.
      * @param array $data
      */
