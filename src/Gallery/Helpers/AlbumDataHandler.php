@@ -46,7 +46,7 @@ class AlbumDataHandler
         return $albumData;
     }
 
-    public function prepareSiblingLeftRightLevelPosition(AlbumEntity $album)
+    public function prepareSiblingData(AlbumEntity $album)
     {
         $albumData['lft'] = $album->getRgt() + 1;
         $albumData['rgt'] = $album->getRgt() + 2;

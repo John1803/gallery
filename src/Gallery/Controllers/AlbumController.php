@@ -5,15 +5,12 @@ namespace Gallery\Controllers;
 use Core\Controller\AbstractController;
 use Core\Helpers\Filesystem;
 use Gallery\Helpers\AlbumDataHandler;
-use Gallery\Models\Album;
 use Gallery\Models\AlbumEntity;
 use Gallery\Models\AlbumMapper;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AlbumController extends AbstractController
 {
-
-    const ALBUMS_DIR = "../web/albums/";
 
     public function indexAction()
     {
@@ -37,7 +34,7 @@ class AlbumController extends AbstractController
             $albumHandledData = $albumHandlerData->prepareDescendantData($albumAncestor, $albumData);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }  else if ($albumLastSibling = $albumMapper->getAlbumWithMaxRightProperty()) {
-            $albumHandledData = $albumHandlerData->prepareSiblingLeftRightLevelPosition($albumLastSibling);
+            $albumHandledData = $albumHandlerData->prepareSiblingData($albumLastSibling);
             $albumData = $albumHandlerData->mergeReceivedHandledData($albumData, $albumHandledData);
         }
 
@@ -45,6 +42,14 @@ class AlbumController extends AbstractController
         $album = new AlbumEntity($handledAlbumData);
         $filesystem->mkdir($album->getPath());
         $albumMapper->save($album);
+
+        // TODO: Redirect
+
+        $albums = $albumMapper->getRootAlbums();
+        return $this->getTemplating()->render($this->getResponse(),
+            "gallery/gallery.phtml",
+            ['albums' => $albums, ]
+        );
     }
 
     public function editAction()
